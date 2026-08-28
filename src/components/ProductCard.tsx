@@ -1,4 +1,5 @@
 import { Minus, Plus } from "lucide-react";
+import { useState } from "react";
 import { CategoryIcon } from "@/components/CategoryIcon";
 import { categoryBySlug, formatBRL, type Product } from "@/data/catalog";
 import { useCart } from "@/lib/cart";
@@ -7,28 +8,27 @@ export function ProductCard({ product }: { product: Product }) {
   const { qtyOf, add, increment, decrement } = useCart();
   const qty = qtyOf(product.id);
   const category = categoryBySlug(product.category);
+  const [imageOk, setImageOk] = useState(Boolean(product.image));
 
   return (
     <article className="flex gap-3 rounded-2xl bg-card p-3 shadow-[var(--shadow-card)]">
       <div className="relative size-20 shrink-0 overflow-hidden rounded-xl bg-secondary">
-        {product.image ? (
+        {imageOk && product.image ? (
           <img
             src={product.image}
             alt={product.name}
             loading="lazy"
-            referrerPolicy="no-referrer"
             className="size-full object-contain"
-            onError={(event) => {
-              event.currentTarget.style.display = "none";
-            }}
+            onError={() => setImageOk(false)}
           />
-        ) : null}
-        <div
-          className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center text-primary-foreground"
-          style={{ backgroundColor: category?.color }}
-        >
-          <CategoryIcon name={category?.icon ?? "Package"} className="size-8" />
-        </div>
+        ) : (
+          <div
+            className="flex size-full items-center justify-center text-primary-foreground"
+            style={{ backgroundColor: category?.color }}
+          >
+            <CategoryIcon name={category?.icon ?? "Package"} className="size-8" />
+          </div>
+        )}
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col">
