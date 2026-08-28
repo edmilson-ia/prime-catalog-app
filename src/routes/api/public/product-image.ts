@@ -24,7 +24,6 @@ export const Route = createFileRoute("/api/public/product-image")({
         }
 
         const bytes = await upstream.arrayBuffer();
-        console.log("product-image", id, upstream.status, contentType, bytes.byteLength);
         return new Response(bytes, {
           headers: {
             "content-type": contentType,
