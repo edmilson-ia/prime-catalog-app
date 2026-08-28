@@ -23,7 +23,8 @@ export const Route = createFileRoute("/api/public/product-image")({
           return new Response("Not an image", { status: 404 });
         }
 
-        return new Response(upstream.body, {
+        const bytes = await upstream.arrayBuffer();
+        return new Response(bytes, {
           headers: {
             "content-type": contentType,
             "cache-control": "public, max-age=86400, s-maxage=604800",
