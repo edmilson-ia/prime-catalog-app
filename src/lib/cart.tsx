@@ -2,11 +2,15 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
 } from "react";
 import { formatBRL, type Product } from "@/data/catalog";
+
+const STORAGE_KEY = "prime-cart";
+
 
 export const WHATSAPP_NUMBER = "5521988012670";
 
