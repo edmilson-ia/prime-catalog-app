@@ -2,11 +2,15 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
 } from "react";
 import { formatBRL, type Product } from "@/data/catalog";
+
+const STORAGE_KEY = "prime-cart";
+
 
 export const WHATSAPP_NUMBER = "5521988012670";
 
@@ -31,6 +35,27 @@ const CartContext = createContext<CartContextValue | null>(null);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [lines, setLines] = useState<CartLine[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(STORAGE_KEY);
+      if (raw) setLines(JSON.parse(raw) as CartLine[]);
+    } catch {
+      /* ignore */
+    }
+    setLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (!loaded) return;
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(lines));
+    } catch {
+      /* ignore */
+    }
+  }, [lines, loaded]);
+
 
   const add = useCallback((product: Product) => {
     setLines((prev) =>

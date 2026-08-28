@@ -58,7 +58,11 @@ function Contato() {
             Rio de Janeiro e Baixada Fluminense
           </InfoRow>
           <InfoRow icon={<Clock className="size-4 text-primary" />} title="Horário">
-            Segunda a sábado, 8h às 18h
+            Seg a sex: 07:00 às 18:00
+            <br />
+            Sábado: 07:00 às 17:00
+            <br />
+            Domingo e feriado: 07:00 às 13:00
           </InfoRow>
         </div>
 
