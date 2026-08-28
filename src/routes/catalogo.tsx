@@ -6,11 +6,11 @@ import { CategoryIcon } from "@/components/CategoryIcon";
 import { ProductCard } from "@/components/ProductCard";
 import { categories, categoryBySlug, products } from "@/data/catalog";
 
-type CatalogSearch = { cat?: string };
+type CatalogSearch = { cat?: string | undefined };
 
 export const Route = createFileRoute("/catalogo")({
   validateSearch: (search: Record<string, unknown>): CatalogSearch => ({
-    cat: typeof search.cat === "string" ? search.cat : undefined,
+    cat: typeof search["cat"] === "string" ? (search["cat"] as string) : undefined,
   }),
   head: () => ({
     meta: [
@@ -36,7 +36,7 @@ function Catalogo() {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
 
-  const activeCat = cat ?? categories[0].slug;
+  const activeCat = cat ?? categories[0]!.slug;
   const term = query.trim().toLowerCase();
 
   const list = useMemo(() => {
