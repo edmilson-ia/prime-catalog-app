@@ -24,8 +24,8 @@ export function PhoneShell({ children }: { children: ReactNode }) {
   const { count, whatsappUrl } = useCart();
 
   return (
-    <div className="flex min-h-screen justify-center py-0 sm:py-6">
-      <div className="relative flex w-full max-w-[400px] flex-col overflow-hidden bg-background shadow-[var(--shadow-frame)] sm:rounded-[2.25rem] sm:border-4 sm:border-ink">
+    <div className="flex h-dvh justify-center py-0 sm:py-6">
+      <div className="relative flex h-full w-full max-w-[400px] flex-col overflow-hidden bg-background shadow-[var(--shadow-frame)] sm:rounded-[2.25rem] sm:border-4 sm:border-ink">
         <main className="flex-1 overflow-y-auto pb-28">{children}</main>
 
         <a
