@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Banknote, ChevronRight } from "lucide-react";
-import logo from "@/assets/logo-prime.png";
+import { logoUrl } from "@/lib/logo";
 import { AppHeader } from "@/components/AppHeader";
 import { CategoryIcon } from "@/components/CategoryIcon";
 import {
@@ -40,7 +40,7 @@ function Inicio() {
 
       <section className="bg-hero-gradient px-5 pt-7 pb-8 text-center">
         <img
-          src={logo}
+          src={logoUrl}
           alt="Logo Prime Alimentos"
           width={1024}
           height={1024}

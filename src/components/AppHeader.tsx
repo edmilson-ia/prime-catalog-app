@@ -1,5 +1,5 @@
 import { ShoppingCart } from "lucide-react";
-import logo from "@/assets/logo-prime.png";
+import { logoUrl } from "@/lib/logo";
 import { useCart } from "@/lib/cart";
 
 export function AppHeader({ title }: { title: string }) {
@@ -8,7 +8,7 @@ export function AppHeader({ title }: { title: string }) {
   return (
     <header className="sticky top-0 z-20 flex items-center gap-3 bg-ink px-4 py-3">
       <img
-        src={logo}
+        src={logoUrl}
         alt="Prime Alimentos"
         width={40}
         height={40}
@@ -20,19 +20,19 @@ export function AppHeader({ title }: { title: string }) {
         </p>
         <p className="truncate text-[11px] text-gold">{title}</p>
       </div>
-      {count > 0 ? (
-        <button
-          type="button"
-          onClick={() => setCartOpen(true)}
-          className="relative grid size-10 place-items-center rounded-full bg-primary text-primary-foreground"
-          aria-label={`Abrir carrinho com ${count} itens`}
-        >
-          <ShoppingCart className="size-5" />
+      <button
+        type="button"
+        onClick={() => setCartOpen(true)}
+        className="relative grid size-10 place-items-center rounded-full bg-primary text-primary-foreground"
+        aria-label={`Abrir carrinho com ${count} itens`}
+      >
+        <ShoppingCart className="size-5" />
+        {count > 0 ? (
           <span className="absolute -top-1 -right-1 grid min-w-5 place-items-center rounded-full bg-gold px-1 text-[10px] font-bold text-ink">
             {count}
           </span>
-        </button>
-      ) : null}
+        ) : null}
+      </button>
     </header>
   );
 }
