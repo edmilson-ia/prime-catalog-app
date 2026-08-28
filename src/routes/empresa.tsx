@@ -21,7 +21,7 @@ export const Route = createFileRoute("/empresa")({
       },
     ],
   }),
-  component: Empresa;
+  component: Empresa,
 });
 
 function Empresa() {
