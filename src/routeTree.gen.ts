@@ -14,6 +14,7 @@ import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as CatalogoRouteImport } from './routes/catalogo'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as EmpresaRouteImport } from './routes/empresa'
+import { Route as ApiPublicProductImageRouteImport } from './routes/api/public/product-image'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,6 +41,11 @@ const EmpresaRoute = EmpresaRouteImport.update({
   path: '/empresa',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicProductImageRoute = ApiPublicProductImageRouteImport.update({
+  id: '/api/public/product-image',
+  path: '/api/public/product-image',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/catalogo': typeof CatalogoRoute
   '/contato': typeof ContatoRoute
   '/empresa': typeof EmpresaRoute
+  '/api/public/product-image': typeof ApiPublicProductImageRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +61,7 @@ export interface FileRoutesByTo {
   '/catalogo': typeof CatalogoRoute
   '/contato': typeof ContatoRoute
   '/empresa': typeof EmpresaRoute
+  '/api/public/product-image': typeof ApiPublicProductImageRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,13 +70,33 @@ export interface FileRoutesById {
   '/catalogo': typeof CatalogoRoute
   '/contato': typeof ContatoRoute
   '/empresa': typeof EmpresaRoute
+  '/api/public/product-image': typeof ApiPublicProductImageRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/cadastro' | '/catalogo' | '/contato' | '/empresa'
+  fullPaths:
+    | '/'
+    | '/cadastro'
+    | '/catalogo'
+    | '/contato'
+    | '/empresa'
+    | '/api/public/product-image'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/cadastro' | '/catalogo' | '/contato' | '/empresa'
-  id: '__root__' | '/' | '/cadastro' | '/catalogo' | '/contato' | '/empresa'
+  to:
+    | '/'
+    | '/cadastro'
+    | '/catalogo'
+    | '/contato'
+    | '/empresa'
+    | '/api/public/product-image'
+  id:
+    | '__root__'
+    | '/'
+    | '/cadastro'
+    | '/catalogo'
+    | '/contato'
+    | '/empresa'
+    | '/api/public/product-image'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,6 +105,7 @@ export interface RootRouteChildren {
   CatalogoRoute: typeof CatalogoRoute
   ContatoRoute: typeof ContatoRoute
   EmpresaRoute: typeof EmpresaRoute
+  ApiPublicProductImageRoute: typeof ApiPublicProductImageRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -116,6 +145,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmpresaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/product-image': {
+      id: '/api/public/product-image'
+      path: '/api/public/product-image'
+      fullPath: '/api/public/product-image'
+      preLoaderRoute: typeof ApiPublicProductImageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -125,6 +161,7 @@ const rootRouteChildren: RootRouteChildren = {
   CatalogoRoute: CatalogoRoute,
   ContatoRoute: ContatoRoute,
   EmpresaRoute: EmpresaRoute,
+  ApiPublicProductImageRoute: ApiPublicProductImageRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
