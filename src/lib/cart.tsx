@@ -36,6 +36,24 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [lines, setLines] = useState<CartLine[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
 
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(STORAGE_KEY);
+      if (raw) setLines(JSON.parse(raw) as CartLine[]);
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(lines));
+    } catch {
+      /* ignore */
+    }
+  }, [lines]);
+
+
   const add = useCallback((product: Product) => {
     setLines((prev) =>
       prev.some((l) => l.product.id === product.id)
