@@ -52,7 +52,7 @@ function Contato() {
 
         <div className="space-y-2.5 rounded-2xl bg-card p-4 shadow-[var(--shadow-card)]">
           <InfoRow icon={<Phone className="size-4 text-primary" />} title="Telefone">
-            (21) 98801-2670
+            (21) 96407-9667
           </InfoRow>
           <InfoRow icon={<MapPin className="size-4 text-primary" />} title="Região">
             Rio de Janeiro e Baixada Fluminense
@@ -65,6 +65,24 @@ function Contato() {
             Domingo e feriado: 07:00 às 13:00
           </InfoRow>
         </div>
+
+        <a
+          href="https://maps.app.goo.gl/gB1GUBmU8LwwhMoK8?g_st=ic"
+          target="_blank"
+          rel="noreferrer"
+          className="flex items-center gap-3 rounded-2xl bg-card p-4 shadow-[var(--shadow-card)]"
+        >
+          <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-secondary">
+            <MapPin className="size-5 text-primary" />
+          </span>
+          <div className="min-w-0">
+            <p className="text-xs font-bold text-ink">Endereço do depósito</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              R. Gen. Corrêa e Castro, 298 · Jardim América, Rio de Janeiro
+            </p>
+            <p className="mt-1 text-xs font-bold text-primary">Abrir no Google Maps</p>
+          </div>
+        </a>
 
         <div className="rounded-2xl bg-secondary p-4">
           <p className="text-xs font-semibold text-ink">
