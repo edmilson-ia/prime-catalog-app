@@ -1,3 +1,8 @@
+import amstelImage from "@/assets/products/amstel-473-c12.jpg.asset.json";
+import brahmaZeroImage from "@/assets/products/brahma-zero-350-c12.jpg.asset.json";
+import guaravitaImage from "@/assets/products/guaravita-c24.jpg.asset.json";
+import whiskyBallImage from "@/assets/products/whisky-ball-10-750.jpg.asset.json";
+
 // Catálogo Prime Alimentos — gerado a partir da planilha do cliente.
 export type Product = {
   id: string;
@@ -46,7 +51,7 @@ export const featuredCategories = [
 ];
 
 export const products: Product[] = [
-  { id: "p0", name: "AMSTEL 473ML C12", price: 46.0, category: "cervejas", image: "/api/public/product-image?id=1vV62il_Lw_a5PM7dqGhAWQUDRwFaS-A1" },
+  { id: "p0", name: "AMSTEL 473ML C12", price: 46.0, category: "cervejas", image: amstelImage.url },
   { id: "p1", name: "ANTARCTICA 350ML C18", price: 54.0, category: "cervejas", image: "/api/public/product-image?id=1kRPFY_KXs23DmN58cn_zp_tRl9ZVy54A" },
   { id: "p2", name: "ANTARCTICA 473ML C12", price: 41.8, category: "cervejas", image: "/api/public/product-image?id=1TGbEWmKUwB9xRAFYT5Aqi1-NObB0srY7" },
   { id: "p3", name: "ANTARCTICA 550ML C12", price: 49.5, category: "cervejas", image: "/api/public/product-image?id=1iFIAYdgnlHpbWuQgJF7012mNxidmIjVA" },
@@ -82,7 +87,7 @@ export const products: Product[] = [
   { id: "p33", name: "STELLA LATAO 473ML C12", price: 59.0, category: "cervejas", image: "/api/public/product-image?id=1VYEzX3tzJycxmNtZbxXHk-c5CCamIeuY" },
   { id: "p34", name: "STELLA PURE GOLD LONG", price: 136.0, category: "cervejas", image: "/api/public/product-image?id=1EEwuXPLbKLixEQZnlcJgu-dUgzSYOC6H" },
   { id: "p35", name: "STELLA PURE GOLD 473ML", price: 68.0, category: "cervejas", image: "/api/public/product-image?id=1Nb0sGMLJGDCHxh-nncE_q6L2h6MKW6TO" },
-  { id: "p36", name: "BRAHMA ZERO 350ML C12", price: 31.0, category: "cervejas", image: "/api/public/product-image?id=1Owqe-_Q0KG7IeufLN2_Zsh-CryGfmNma" },
+  { id: "p36", name: "BRAHMA ZERO 350ML C12", price: 31.0, category: "cervejas", image: brahmaZeroImage.url },
   { id: "p37", name: "COCA COLA 2L C6", price: 50.5, category: "refrigerantes", image: "/api/public/product-image?id=1sxHCSSoErXCD-v0l_Ch74JjiO6tRo_4X" },
   { id: "p38", name: "COCA COLA ZERO 2L C6", price: 51.0, category: "refrigerantes", image: "/api/public/product-image?id=1rfM2O3gF31j1AsW-OSo2fa-pu8Jnt4ag" },
   { id: "p39", name: "COCA COLA CX RET 2L", price: 66.5, category: "refrigerantes", image: "/api/public/product-image?id=18D3yQJtvfYB2i589MlpZ7XLWb2GX9_oD" },
@@ -99,7 +104,7 @@ export const products: Product[] = [
   { id: "p50", name: "GUARANA ANTARTICA 2L C6", price: 38.0, category: "refrigerantes", image: "/api/public/product-image?id=1ICrg0AuF0nEEMODeQZzAav4o3K6frf1k" },
   { id: "p51", name: "GUARANA ZERO 2L C6", price: 34.0, category: "refrigerantes", image: "/api/public/product-image?id=1lrZ6ZIMVWn88WpkMDJv8zQF0lCfaaAoA" },
   { id: "p52", name: "GUARANA ANTARTICA 1L C6", price: 20.0, category: "refrigerantes", image: "/api/public/product-image?id=115ZRLBS4lTQLrEtwNp6_2vXmeuzEzgjP" },
-  { id: "p53", name: "GUARAVITA CAIXA C24", price: 20.0, category: "refrigerantes", image: "/api/public/product-image?id=1bdoQUkWnv0qmSdBJtqPhR-b5EN9otOqz" },
+  { id: "p53", name: "GUARAVITA CAIXA C24", price: 20.0, category: "refrigerantes", image: guaravitaImage.url },
   { id: "p54", name: "GUARAVITON C12", price: 23.5, category: "refrigerantes", image: "/api/public/product-image?id=1DSQjil7ijCXCA5HgtzhmVfUu5i1FKas0" },
   { id: "p55", name: "H2O LIMONETO 500ML C12", price: 38.5, category: "refrigerantes", image: "/api/public/product-image?id=1HFMUbc7DM7N6YOMkCJj-lHp-rWqZ6J0I" },
   { id: "p56", name: "MINEIRINHO C6", price: 41.0, category: "refrigerantes", image: "/api/public/product-image?id=11n4Ht0v4ZLE-TlvlmEt1NLgzNKqt6NcN" },
@@ -115,7 +120,7 @@ export const products: Product[] = [
   { id: "p66", name: "ENERG REDBULL C24", price: 175.0, category: "energeticos", image: "/api/public/product-image?id=1eaMPlEFFpMwGxjfGZcsQQicUwc_SmiW6" },
   { id: "p67", name: "ENERG REDBULL MELANC C24", price: 175.0, category: "energeticos", image: "/api/public/product-image?id=1rvf6CyB30t2F7jL4cpptRtRBu34waJ23" },
   { id: "p68", name: "ENERG VULCANO 2L C6", price: 63.0, category: "energeticos", image: "/api/public/product-image?id=1kwZfWA3n5cVdfuU0xMPb65IGKwr24Y1N" },
-  { id: "p69", name: "WHISKY BALL 10ANOS 750ML", price: 75.0, category: "whisky", image: "/api/public/product-image?id=1q57DgsEEMCEBFUZeleVIJJuGwWZo8iIe" },
+  { id: "p69", name: "WHISKY BALL 10ANOS 750ML", price: 75.0, category: "whisky", image: whiskyBallImage.url },
   { id: "p70", name: "WHISKY BALL ELTON JONH", price: 65.0, category: "whisky", image: "/api/public/product-image?id=1BCoCeKIk75ztetc8umtydWL1dQPKYDsA" },
   { id: "p71", name: "WHISKY BALL FINEST 750ML", price: 45.0, category: "whisky", image: "/api/public/product-image?id=1DNJLR8T8VviGXeIzYJrZkJSBhNv_Wec9" },
   { id: "p72", name: "WHISKY BALL FINEST 1L", price: 58.0, category: "whisky", image: "/api/public/product-image?id=1OWa6Jp4Zu4-oHtyhrLnCxqGjZ67krOoS" },

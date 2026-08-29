@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { AppHeader } from "@/components/AppHeader";
-import { WhatsappIcon } from "@/components/WhatsappIcon";
 import { WHATSAPP_NUMBER } from "@/lib/cart";
 
 export const Route = createFileRoute("/cadastro")({
@@ -29,10 +28,9 @@ function Cadastro() {
     estabelecimento: "",
     telefone: "",
     endereco: "",
-    observacoes: "",
   });
 
-  const message = `Olá, Prime Alimentos! Quero me cadastrar:\n\nNome: ${form.nome}\nEstabelecimento: ${form.estabelecimento}\nTelefone: ${form.telefone}\nEndereço: ${form.endereco}\nObservações: ${form.observacoes}`;
+  const message = `Olá, Prime Alimentos! Quero me cadastrar:\n\nNome: ${form.nome}\nEstabelecimento: ${form.estabelecimento}\nTelefone: ${form.telefone}\nEndereço: ${form.endereco}`;
 
   const fields: { key: keyof typeof form; label: string; placeholder: string }[] = [
     { key: "nome", label: "Nome completo", placeholder: "Seu nome" },
@@ -72,27 +70,13 @@ function Cadastro() {
             </label>
           ))}
 
-          <label className="block">
-            <span className="text-[11px] font-bold text-ink">Observações</span>
-            <textarea
-              value={form.observacoes}
-              onChange={(event) =>
-                setForm((prev) => ({ ...prev, observacoes: event.target.value }))
-              }
-              rows={3}
-              placeholder="Produtos de interesse, melhor horário de entrega..."
-              className="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary"
-            />
-          </label>
-
           <a
             href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`}
             target="_blank"
             rel="noreferrer"
-            className="flex items-center justify-center gap-2 rounded-full bg-gold px-4 py-3 text-sm font-bold text-ink transition-colors hover:bg-gold-hover"
+            className="flex items-center justify-center rounded-full bg-gold px-4 py-3 text-sm font-bold text-ink transition-colors hover:bg-gold-hover"
           >
-            <WhatsappIcon className="size-4 text-whatsapp" />
-            Enviar cadastro pelo WhatsApp
+            Fazer cadastro
           </a>
         </div>
       </section>

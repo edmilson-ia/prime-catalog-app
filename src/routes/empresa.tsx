@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Banknote, Crown, MapPin, Truck } from "lucide-react";
+import { Banknote, Crown, MapPin } from "lucide-react";
 import { logoUrl } from "@/lib/logo";
 import { AppHeader } from "@/components/AppHeader";
 import { products } from "@/data/catalog";
@@ -55,9 +55,6 @@ function Empresa() {
         </p>
 
         <div className="grid grid-cols-2 gap-3">
-          <Card icon={<Truck className="size-4 text-primary" />} title="Entrega no mesmo dia">
-            Pedidos confirmados até o fim da tarde.
-          </Card>
           <Card icon={<Banknote className="size-4 text-primary" />} title="Pix e Dinheiro">
             Pagamento simples na entrega.
           </Card>

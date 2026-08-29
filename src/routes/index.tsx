@@ -46,10 +46,7 @@ function Inicio() {
           height={1024}
           className="mx-auto size-28 rounded-full bg-card object-contain p-1"
         />
-        <p className="mt-3 text-xs font-semibold text-gold">
-          Rio de Janeiro · Entrega no mesmo dia
-        </p>
-        <h1 className="mt-2 text-2xl font-bold text-primary-foreground">
+        <h1 className="mt-4 text-2xl font-bold text-primary-foreground">
           Bebidas e alimentos no atacado
         </h1>
 
