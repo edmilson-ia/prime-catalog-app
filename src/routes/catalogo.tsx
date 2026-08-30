@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { AppHeader } from "@/components/AppHeader";
 import { CategoryIcon } from "@/components/CategoryIcon";
 import { ProductCard } from "@/components/ProductCard";
-import { categories, categoryBySlug, products } from "@/data/catalog";
+import { categories, products } from "@/data/catalog";
 
 type CatalogSearch = { cat?: string | undefined };
 
@@ -36,17 +36,29 @@ function Catalogo() {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
 
-  const activeCat = cat ?? categories[0]!.slug;
+  const activeCat = cat ?? "todos";
   const term = query.trim().toLowerCase();
 
-  const list = useMemo(() => {
-    if (term.length > 0) {
-      return products.filter((p) => p.name.toLowerCase().includes(term));
-    }
-    return products.filter((p) => p.category === activeCat);
-  }, [term, activeCat]);
+  const searchResults = useMemo(
+    () =>
+      term.length > 0
+        ? products.filter((p) => p.name.toLowerCase().includes(term))
+        : [],
+    [term],
+  );
 
-  const activeCategory = categoryBySlug(activeCat);
+  const groups = useMemo(() => {
+    const visible =
+      activeCat === "todos"
+        ? categories
+        : categories.filter((c) => c.slug === activeCat);
+    return visible
+      .map((category) => ({
+        category,
+        items: products.filter((p) => p.category === category.slug),
+      }))
+      .filter((group) => group.items.length > 0);
+  }, [activeCat]);
 
   return (
     <div>
@@ -64,46 +76,79 @@ function Catalogo() {
         </div>
 
         <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
-          {categories.map((category) => {
-            const isActive = term.length === 0 && category.slug === activeCat;
-            return (
-              <button
-                key={category.slug}
-                type="button"
-                onClick={() => {
-                  setQuery("");
-                  navigate({ to: "/catalogo", search: { cat: category.slug } });
-                }}
-                className={`flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
-                  isActive
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary text-ink"
-                }`}
-              >
-                <CategoryIcon name={category.icon} className="size-3.5" />
-                {category.name}
-              </button>
-            );
-          })}
+          {[{ slug: "todos", name: "Todos", icon: "ShoppingBasket" }, ...categories].map(
+            (category) => {
+              const isActive = term.length === 0 && category.slug === activeCat;
+              return (
+                <button
+                  key={category.slug}
+                  type="button"
+                  onClick={() => {
+                    setQuery("");
+                    navigate({
+                      to: "/catalogo",
+                      search:
+                        category.slug === "todos"
+                          ? {}
+                          : { cat: category.slug },
+                    });
+                  }}
+                  className={`flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
+                    isActive
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-secondary text-ink"
+                  }`}
+                >
+                  <CategoryIcon name={category.icon} className="size-3.5" />
+                  {category.name}
+                </button>
+              );
+            },
+          )}
         </div>
       </div>
 
-      <section className="space-y-2.5 px-4 pt-2 pb-6">
-        <p className="text-[11px] font-semibold text-muted-foreground">
-          {term.length > 0
-            ? `${list.length} resultado(s) para "${query.trim()}"`
-            : `${activeCategory?.name} · ${list.length} itens`}
-        </p>
-        {list.length === 0 ? (
-          <p className="py-8 text-center text-sm text-muted-foreground">
-            Nenhum produto encontrado.
+      {term.length > 0 ? (
+        <section className="space-y-2.5 px-4 pt-2 pb-6">
+          <p className="text-[11px] font-semibold text-muted-foreground">
+            {searchResults.length} resultado(s) para "{query.trim()}"
           </p>
-        ) : (
-          list.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))
-        )}
-      </section>
+          {searchResults.length === 0 ? (
+            <p className="py-8 text-center text-sm text-muted-foreground">
+              Nenhum produto encontrado.
+            </p>
+          ) : (
+            searchResults.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))
+          )}
+        </section>
+      ) : (
+        <div className="px-4 pt-2 pb-6">
+          {groups.map((group) => (
+            <section key={group.category.slug} className="space-y-2.5 pb-5">
+              <div className="flex items-center gap-2 pt-1">
+                <span
+                  className="grid size-7 shrink-0 place-items-center rounded-lg text-primary-foreground"
+                  style={{ backgroundColor: group.category.color }}
+                >
+                  <CategoryIcon name={group.category.icon} className="size-4" />
+                </span>
+                <h2 className="text-sm font-bold text-ink">
+                  {group.category.name}
+                </h2>
+                <span className="text-[11px] font-semibold text-muted-foreground">
+                  {group.items.length} itens
+                </span>
+              </div>
+              {group.items.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </section>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
+

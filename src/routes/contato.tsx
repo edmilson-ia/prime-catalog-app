@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Clock, MapPin, Phone } from "lucide-react";
 import { AppHeader } from "@/components/AppHeader";
 import { WhatsappIcon } from "@/components/WhatsappIcon";
-import { useCart } from "@/lib/cart";
+import { useCart, WHATSAPP_NUMBER } from "@/lib/cart";
 
 export const Route = createFileRoute("/contato")({
   head: () => ({
@@ -44,10 +44,19 @@ function Contato() {
           className="flex items-center gap-3 rounded-2xl bg-primary p-4 text-primary-foreground"
         >
           <WhatsappIcon className="size-6 text-gold" />
-          <div>
-            <p className="text-sm font-bold">WhatsApp</p>
-            <p className="text-xs opacity-90">+55 21 98801-2670</p>
-          </div>
+          <p className="text-sm font-bold">WhatsApp</p>
+        </a>
+
+        <a
+          href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+            "Olá, Prime Alimentos! Quero entrar no Grupo Promoções.",
+          )}`}
+          target="_blank"
+          rel="noreferrer"
+          className="flex items-center gap-3 rounded-2xl bg-gold p-4 text-ink transition-colors hover:bg-gold-hover"
+        >
+          <WhatsappIcon className="size-6 text-ink" />
+          <p className="text-sm font-bold">Grupo Promoções</p>
         </a>
 
         <div className="space-y-2.5 rounded-2xl bg-card p-4 shadow-[var(--shadow-card)]">
@@ -55,7 +64,7 @@ function Contato() {
             (21) 96407-9667
           </InfoRow>
           <InfoRow icon={<MapPin className="size-4 text-primary" />} title="Região">
-            Rio de Janeiro e Baixada Fluminense
+            Rio de Janeiro
           </InfoRow>
           <InfoRow icon={<Clock className="size-4 text-primary" />} title="Horário">
             Seg a sex: 07:00 às 18:00
@@ -84,11 +93,6 @@ function Contato() {
           </div>
         </a>
 
-        <div className="rounded-2xl bg-secondary p-4">
-          <p className="text-xs font-semibold text-ink">
-            Pagamento via Pix e Dinheiro
-          </p>
-        </div>
       </section>
     </div>
   );

@@ -40,7 +40,7 @@ function Cadastro() {
       placeholder: "Bar, mercado, restaurante...",
     },
     { key: "telefone", label: "Telefone / WhatsApp", placeholder: "(21) 90000-0000" },
-    { key: "endereco", label: "Endereço de entrega", placeholder: "Rua, número, bairro" },
+    { key: "endereco", label: "Endereço", placeholder: "Rua, número, bairro" },
   ];
 
   return (

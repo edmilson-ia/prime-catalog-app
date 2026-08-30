@@ -1,4 +1,4 @@
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus, X } from "lucide-react";
 import { useState } from "react";
 import { CategoryIcon } from "@/components/CategoryIcon";
 import { categoryBySlug, formatBRL, type Product } from "@/data/catalog";
@@ -9,18 +9,28 @@ export function ProductCard({ product }: { product: Product }) {
   const qty = qtyOf(product.id);
   const category = categoryBySlug(product.category);
   const [imageOk, setImageOk] = useState(Boolean(product.image));
+  const [zoom, setZoom] = useState(false);
+
+  const hasImage = imageOk && product.image;
 
   return (
     <article className="flex gap-3 rounded-2xl bg-card p-3 shadow-[var(--shadow-card)]">
       <div className="relative size-20 shrink-0 overflow-hidden rounded-xl bg-secondary">
-        {imageOk && product.image ? (
-          <img
-            src={product.image}
-            alt={product.name}
-            loading="lazy"
-            className="size-full object-contain"
-            onError={() => setImageOk(false)}
-          />
+        {hasImage ? (
+          <button
+            type="button"
+            onClick={() => setZoom(true)}
+            aria-label={`Ampliar imagem de ${product.name}`}
+            className="size-full"
+          >
+            <img
+              src={product.image}
+              alt={product.name}
+              loading="lazy"
+              className="size-full object-contain"
+              onError={() => setImageOk(false)}
+            />
+          </button>
         ) : (
           <div
             className="flex size-full items-center justify-center text-primary-foreground"
@@ -30,6 +40,34 @@ export function ProductCard({ product }: { product: Product }) {
           </div>
         )}
       </div>
+
+      {zoom && hasImage ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/80 p-6"
+          onClick={() => setZoom(false)}
+          role="presentation"
+        >
+          <div className="relative w-full max-w-[340px] rounded-2xl bg-card p-3">
+            <button
+              type="button"
+              aria-label="Fechar imagem"
+              onClick={() => setZoom(false)}
+              className="absolute -top-3 -right-3 grid size-8 place-items-center rounded-full bg-primary text-primary-foreground"
+            >
+              <X className="size-4" />
+            </button>
+            <img
+              src={product.image}
+              alt={product.name}
+              className="max-h-[60vh] w-full object-contain"
+            />
+            <p className="mt-2 text-center text-xs font-semibold text-ink">
+              {product.name}
+            </p>
+          </div>
+        </div>
+      ) : null}
+
 
       <div className="flex min-w-0 flex-1 flex-col">
         <h3 className="text-sm leading-snug font-semibold text-ink">
