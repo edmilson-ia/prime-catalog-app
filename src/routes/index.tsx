@@ -52,6 +52,7 @@ function Inicio() {
 
         <Link
           to="/catalogo"
+          search={{}}
           className="mt-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-gold px-4 py-3.5 text-sm font-bold text-ink transition-colors hover:bg-gold-hover"
         >
           Ver catálogo completo · {products.length} itens
