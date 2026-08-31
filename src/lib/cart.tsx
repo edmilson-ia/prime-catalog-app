@@ -10,9 +10,23 @@ import {
 import { formatBRL, type Product } from "@/data/catalog";
 
 const STORAGE_KEY = "prime-cart";
-
+const ORDER_KEY = "prime-order-number";
+const FIRST_ORDER = 1001;
 
 export const WHATSAPP_NUMBER = "5521988012670";
+
+function nextOrderNumber() {
+  try {
+    const raw = window.localStorage.getItem(ORDER_KEY);
+    const current = raw ? Number.parseInt(raw, 10) : NaN;
+    const next = Number.isFinite(current) ? current + 1 : FIRST_ORDER;
+    window.localStorage.setItem(ORDER_KEY, String(next));
+    return next;
+  } catch {
+    return FIRST_ORDER;
+  }
+}
+
 
 export type CartLine = { product: Product; qty: number };
 
@@ -96,7 +110,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
               `• ${l.product.name}\n   ${l.qty} x ${formatBRL(l.product.price)} = ${formatBRL(l.qty * l.product.price)}`,
           )
           .join("\n");
-        message = `Olá, Prime Alimentos! Gostaria de fazer o pedido:\n\n${items}\n\nTotal geral: ${formatBRL(total)}`;
+        const order = nextOrderNumber();
+        const totalItems = lines.reduce((sum, l) => sum + l.qty, 0);
+        message = `Olá, Prime Alimentos! Gostaria de fazer o pedido:\n\nPedido nº ${order}\n\n${items}\n\nQuantidade de itens: ${totalItems}\nTotal geral: ${formatBRL(total)}`;
       }
       return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
     };
