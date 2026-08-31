@@ -110,7 +110,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
               `• ${l.product.name}\n   ${l.qty} x ${formatBRL(l.product.price)} = ${formatBRL(l.qty * l.product.price)}`,
           )
           .join("\n");
-        message = `Olá, Prime Alimentos! Gostaria de fazer o pedido:\n\n${items}\n\nTotal geral: ${formatBRL(total)}`;
+        const order = nextOrderNumber();
+        const totalItems = lines.reduce((sum, l) => sum + l.qty, 0);
+        message = `Olá, Prime Alimentos! Gostaria de fazer o pedido:\n\nPedido nº ${order}\n\n${items}\n\nQuantidade de itens: ${totalItems}\nTotal geral: ${formatBRL(total)}`;
       }
       return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
     };
