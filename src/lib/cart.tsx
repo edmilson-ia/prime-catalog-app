@@ -10,9 +10,23 @@ import {
 import { formatBRL, type Product } from "@/data/catalog";
 
 const STORAGE_KEY = "prime-cart";
-
+const ORDER_KEY = "prime-order-number";
+const FIRST_ORDER = 1001;
 
 export const WHATSAPP_NUMBER = "5521988012670";
+
+function nextOrderNumber() {
+  try {
+    const raw = window.localStorage.getItem(ORDER_KEY);
+    const current = raw ? Number.parseInt(raw, 10) : NaN;
+    const next = Number.isFinite(current) ? current + 1 : FIRST_ORDER;
+    window.localStorage.setItem(ORDER_KEY, String(next));
+    return next;
+  } catch {
+    return FIRST_ORDER;
+  }
+}
+
 
 export type CartLine = { product: Product; qty: number };
 
