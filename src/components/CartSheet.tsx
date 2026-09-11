@@ -3,11 +3,27 @@ import { formatBRL } from "@/data/catalog";
 import { useCart } from "@/lib/cart";
 import { WhatsappIcon } from "@/components/WhatsappIcon";
 import { normalizeProductName, useProductStock } from "@/lib/stock";
+import { useEffect } from "react";
 
 export function CartSheet() {
-  const { lines, total, cartOpen, setCartOpen, increment, decrement, whatsappUrl } =
+  const { lines, total, cartOpen, setCartOpen, increment, decrement, updatePrice, whatsappUrl } =
     useCart();
   const { data: stockByName = {} } = useProductStock();
+
+  useEffect(() => {
+    lines.forEach((line) => {
+      const promotionalPrice =
+        stockByName[normalizeProductName(line.product.name)]?.promotionalPrice;
+      const currentPrice =
+        promotionalPrice !== null &&
+        promotionalPrice !== undefined &&
+        promotionalPrice > 0 &&
+        promotionalPrice !== line.product.price
+          ? promotionalPrice
+          : line.product.price;
+      updatePrice(line.product.id, currentPrice);
+    });
+  }, [lines, stockByName, updatePrice]);
 
   if (!cartOpen) return null;
 

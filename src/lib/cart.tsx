@@ -38,6 +38,7 @@ type CartContextValue = {
   add: (product: Product, unitPrice?: number) => void;
   increment: (id: string) => void;
   decrement: (id: string) => void;
+  updatePrice: (id: string, unitPrice: number) => void;
   clear: () => void;
   cartOpen: boolean;
   setCartOpen: (open: boolean) => void;
@@ -100,6 +101,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
+  const updatePrice = useCallback((id: string, unitPrice: number) => {
+    setLines((prev) =>
+      prev.map((line) =>
+        line.product.id === id && line.unitPrice !== unitPrice
+          ? { ...line, unitPrice }
+          : line,
+      ),
+    );
+  }, []);
+
   const value = useMemo<CartContextValue>(() => {
     const count = pricedLines.reduce((sum, l) => sum + l.qty, 0);
     const total = pricedLines.reduce((sum, l) => sum + l.qty * l.unitPrice, 0);
@@ -130,12 +141,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
       add,
       increment,
       decrement,
+      updatePrice,
       clear: () => setLines([]),
       cartOpen,
       setCartOpen,
       whatsappUrl,
     };
-  }, [lines, cartOpen, add, increment, decrement]);
+  }, [lines, cartOpen, add, increment, decrement, updatePrice]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
