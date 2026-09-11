@@ -10,7 +10,7 @@ export function ProductCard({
   stock,
 }: {
   product: Product;
-  stock?: ProductStock;
+  stock?: ProductStock | undefined;
 }) {
   const { qtyOf, add, increment, decrement } = useCart();
   const qty = qtyOf(product.id);
