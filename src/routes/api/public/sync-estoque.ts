@@ -100,8 +100,7 @@ export const Route = createFileRoute("/api/public/sync-estoque")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const authorization = request.headers.get("authorization") ?? "";
-        const receivedToken = authorization.replace(/^Bearer\s+/i, "");
+        const receivedToken = request.headers.get("x-sync-token") ?? "";
         if (!receivedToken) {
           return Response.json({ error: "Unauthorized" }, { status: 401 });
         }
