@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Conectar o catálogo ao estoque do Lovable Cloud com polling.
-- [ ] Exibir e bloquear produtos encontrados sem estoque.
-- [ ] Manter produtos não encontrados com o comportamento atual.
-- [ ] Validar o catálogo no navegador.
+- [x] Conectar o catálogo ao estoque do Lovable Cloud com polling.
+- [x] Exibir e bloquear produtos encontrados sem estoque.
+- [x] Manter produtos não encontrados com o comportamento atual.
+- [x] Validar o catálogo no navegador.
