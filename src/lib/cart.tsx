@@ -28,16 +28,17 @@ function nextOrderNumber() {
 }
 
 
-export type CartLine = { product: Product; qty: number };
+export type CartLine = { product: Product; qty: number; unitPrice: number };
 
 type CartContextValue = {
   lines: CartLine[];
   count: number;
   total: number;
   qtyOf: (id: string) => number;
-  add: (product: Product) => void;
+  add: (product: Product, unitPrice?: number) => void;
   increment: (id: string) => void;
   decrement: (id: string) => void;
+  updatePrice: (id: string, unitPrice: number) => void;
   clear: () => void;
   cartOpen: boolean;
   setCartOpen: (open: boolean) => void;
@@ -71,15 +72,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [lines, loaded]);
 
 
-  const add = useCallback((product: Product) => {
+  const add = useCallback((product: Product, unitPrice = product.price) => {
     setLines((prev) =>
       prev.some((l) => l.product.id === product.id)
         ? prev.map((l) =>
-            l.product.id === product.id ? { ...l, qty: l.qty + 1 } : l,
+            l.product.id === product.id ? { ...l, qty: l.qty + 1, unitPrice } : l,
           )
-        : [...prev, { product, qty: 1 }],
+        : [...prev, { product, qty: 1, unitPrice }],
     );
   }, []);
+
+  const pricedLines = lines.map((line) => ({
+    ...line,
+    unitPrice: Number.isFinite(line.unitPrice) ? line.unitPrice : line.product.price,
+  }));
 
   const increment = useCallback((id: string) => {
     setLines((prev) =>
@@ -95,42 +101,53 @@ export function CartProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
+  const updatePrice = useCallback((id: string, unitPrice: number) => {
+    setLines((prev) =>
+      prev.map((line) =>
+        line.product.id === id && line.unitPrice !== unitPrice
+          ? { ...line, unitPrice }
+          : line,
+      ),
+    );
+  }, []);
+
   const value = useMemo<CartContextValue>(() => {
-    const count = lines.reduce((sum, l) => sum + l.qty, 0);
-    const total = lines.reduce((sum, l) => sum + l.qty * l.product.price, 0);
+    const count = pricedLines.reduce((sum, l) => sum + l.qty, 0);
+    const total = pricedLines.reduce((sum, l) => sum + l.qty * l.unitPrice, 0);
 
     const whatsappUrl = () => {
       let message: string;
-      if (lines.length === 0) {
+      if (pricedLines.length === 0) {
         message = "Olá, Prime Alimentos! Gostaria de mais informações.";
       } else {
-        const items = lines
+        const items = pricedLines
           .map(
             (l) =>
-              `• ${l.product.name}\n   ${l.qty} x ${formatBRL(l.product.price)} = ${formatBRL(l.qty * l.product.price)}`,
+              `• ${l.product.name}\n   ${l.qty} x ${formatBRL(l.unitPrice)} = ${formatBRL(l.qty * l.unitPrice)}`,
           )
           .join("\n");
         const order = nextOrderNumber();
-        const totalItems = lines.reduce((sum, l) => sum + l.qty, 0);
+        const totalItems = pricedLines.reduce((sum, l) => sum + l.qty, 0);
         message = `Olá, Prime Alimentos! Gostaria de fazer o pedido:\n\nPedido nº ${order}\n\n${items}\n\nQuantidade de itens: ${totalItems}\nTotal geral: ${formatBRL(total)}`;
       }
       return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
     };
 
     return {
-      lines,
+      lines: pricedLines,
       count,
       total,
       qtyOf: (id: string) => lines.find((l) => l.product.id === id)?.qty ?? 0,
       add,
       increment,
       decrement,
+      updatePrice,
       clear: () => setLines([]),
       cartOpen,
       setCartOpen,
       whatsappUrl,
     };
-  }, [lines, cartOpen, add, increment, decrement]);
+  }, [lines, cartOpen, add, increment, decrement, updatePrice]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

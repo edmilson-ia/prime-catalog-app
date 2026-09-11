@@ -20,6 +20,13 @@ export function ProductCard({
 
   const hasImage = imageOk && product.image;
   const outOfStock = stock !== undefined && (stock.quantity ?? 0) <= 0;
+  const promotionalPrice = stock?.promotionalPrice;
+  const hasPromotion =
+    promotionalPrice !== null &&
+    promotionalPrice !== undefined &&
+    promotionalPrice > 0 &&
+    promotionalPrice !== product.price;
+  const unitPrice = hasPromotion ? promotionalPrice : product.price;
 
   return (
     <article className="flex gap-3 rounded-2xl bg-card p-3 shadow-[var(--shadow-card)]">
@@ -87,6 +94,11 @@ export function ProductCard({
               FORA DE ESTOQUE
             </span>
           ) : null}
+          {hasPromotion ? (
+            <span className="shrink-0 rounded-md bg-gold px-1.5 py-1 text-[9px] leading-none font-bold text-ink">
+              PROMOÇÃO
+            </span>
+          ) : null}
         </div>
         {product.description ? (
           <p className="mt-0.5 line-clamp-2 text-[11px] text-muted-foreground">
@@ -95,14 +107,21 @@ export function ProductCard({
         ) : null}
 
         <div className="mt-auto flex items-center justify-between gap-2 pt-2">
-          <span className="font-display text-base font-bold text-ink">
-            {formatBRL(product.price)}
+          <span className="flex flex-wrap items-baseline gap-1.5">
+            {hasPromotion ? (
+              <span className="text-[11px] text-muted-foreground line-through">
+                {formatBRL(product.price)}
+              </span>
+            ) : null}
+            <span className={`font-display text-base font-bold ${hasPromotion ? "text-gold-hover" : "text-ink"}`}>
+              {formatBRL(unitPrice)}
+            </span>
           </span>
 
           {qty === 0 ? (
             <button
               type="button"
-              onClick={() => add(product)}
+              onClick={() => add(product, unitPrice)}
               disabled={outOfStock}
               className="rounded-full bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground transition-colors hover:bg-brand-hover disabled:cursor-not-allowed disabled:bg-destructive disabled:opacity-60"
             >

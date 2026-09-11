@@ -33,20 +33,41 @@ export type Database = {
         Row: {
           estoque_atualizado_em: string | null
           id: number
+          preco_promocional: number | null
           PRODUTO: string
           quantidade_estoque: number | null
         }
         Insert: {
           estoque_atualizado_em?: string | null
           id?: number
+          preco_promocional?: number | null
           PRODUTO: string
           quantidade_estoque?: number | null
         }
         Update: {
           estoque_atualizado_em?: string | null
           id?: number
+          preco_promocional?: number | null
           PRODUTO?: string
           quantidade_estoque?: number | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
         }
         Relationships: []
       }
@@ -58,7 +79,7 @@ export type Database = {
       sync_product_stock: { Args: { _rows: Json }; Returns: Json }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -185,6 +206,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin"],
+    },
   },
 } as const
