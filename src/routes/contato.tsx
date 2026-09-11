@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Clock, MapPin, Phone } from "lucide-react";
 import { AppHeader } from "@/components/AppHeader";
 import { WhatsappIcon } from "@/components/WhatsappIcon";
-import { useCart, WHATSAPP_NUMBER } from "@/lib/cart";
+import { useCart } from "@/lib/cart";
+import { DEFAULT_WHATSAPP_NUMBER, useWhatsappNumber } from "@/lib/settings";
 
 export const Route = createFileRoute("/contato")({
   head: () => ({
@@ -27,6 +28,7 @@ export const Route = createFileRoute("/contato")({
 
 function Contato() {
   const { whatsappUrl } = useCart();
+  const { data: whatsappNumber = DEFAULT_WHATSAPP_NUMBER } = useWhatsappNumber();
 
   return (
     <div>
@@ -50,7 +52,7 @@ function Contato() {
         </a>
 
         <a
-          href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+          href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
             "Olá, Prime Alimentos! Quero entrar no Grupo Promoções.",
           )}`}
           target="_blank"

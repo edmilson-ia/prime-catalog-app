@@ -15,6 +15,7 @@ import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as CatalogoRouteImport } from './routes/catalogo'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as EmpresaRouteImport } from './routes/empresa'
+import { Route as ApiPublicPedidoWebhookRouteImport } from './routes/api/public/pedido-webhook'
 import { Route as ApiPublicProductImageRouteImport } from './routes/api/public/product-image'
 import { Route as ApiPublicSyncEstoqueRouteImport } from './routes/api/public/sync-estoque'
 
@@ -48,6 +49,11 @@ const EmpresaRoute = EmpresaRouteImport.update({
   path: '/empresa',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicPedidoWebhookRoute = ApiPublicPedidoWebhookRouteImport.update({
+  id: '/api/public/pedido-webhook',
+  path: '/api/public/pedido-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicProductImageRoute = ApiPublicProductImageRouteImport.update({
   id: '/api/public/product-image',
   path: '/api/public/product-image',
@@ -66,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/catalogo': typeof CatalogoRoute
   '/contato': typeof ContatoRoute
   '/empresa': typeof EmpresaRoute
+  '/api/public/pedido-webhook': typeof ApiPublicPedidoWebhookRoute
   '/api/public/product-image': typeof ApiPublicProductImageRoute
   '/api/public/sync-estoque': typeof ApiPublicSyncEstoqueRoute
 }
@@ -76,6 +83,7 @@ export interface FileRoutesByTo {
   '/catalogo': typeof CatalogoRoute
   '/contato': typeof ContatoRoute
   '/empresa': typeof EmpresaRoute
+  '/api/public/pedido-webhook': typeof ApiPublicPedidoWebhookRoute
   '/api/public/product-image': typeof ApiPublicProductImageRoute
   '/api/public/sync-estoque': typeof ApiPublicSyncEstoqueRoute
 }
@@ -87,6 +95,7 @@ export interface FileRoutesById {
   '/catalogo': typeof CatalogoRoute
   '/contato': typeof ContatoRoute
   '/empresa': typeof EmpresaRoute
+  '/api/public/pedido-webhook': typeof ApiPublicPedidoWebhookRoute
   '/api/public/product-image': typeof ApiPublicProductImageRoute
   '/api/public/sync-estoque': typeof ApiPublicSyncEstoqueRoute
 }
@@ -99,6 +108,7 @@ export interface FileRouteTypes {
     | '/catalogo'
     | '/contato'
     | '/empresa'
+    | '/api/public/pedido-webhook'
     | '/api/public/product-image'
     | '/api/public/sync-estoque'
   fileRoutesByTo: FileRoutesByTo
@@ -109,6 +119,7 @@ export interface FileRouteTypes {
     | '/catalogo'
     | '/contato'
     | '/empresa'
+    | '/api/public/pedido-webhook'
     | '/api/public/product-image'
     | '/api/public/sync-estoque'
   id:
@@ -119,6 +130,7 @@ export interface FileRouteTypes {
     | '/catalogo'
     | '/contato'
     | '/empresa'
+    | '/api/public/pedido-webhook'
     | '/api/public/product-image'
     | '/api/public/sync-estoque'
   fileRoutesById: FileRoutesById
@@ -130,6 +142,7 @@ export interface RootRouteChildren {
   CatalogoRoute: typeof CatalogoRoute
   ContatoRoute: typeof ContatoRoute
   EmpresaRoute: typeof EmpresaRoute
+  ApiPublicPedidoWebhookRoute: typeof ApiPublicPedidoWebhookRoute
   ApiPublicProductImageRoute: typeof ApiPublicProductImageRoute
   ApiPublicSyncEstoqueRoute: typeof ApiPublicSyncEstoqueRoute
 }
@@ -178,6 +191,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmpresaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/pedido-webhook': {
+      id: '/api/public/pedido-webhook'
+      path: '/api/public/pedido-webhook'
+      fullPath: '/api/public/pedido-webhook'
+      preLoaderRoute: typeof ApiPublicPedidoWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/product-image': {
       id: '/api/public/product-image'
       path: '/api/public/product-image'
@@ -202,6 +222,7 @@ const rootRouteChildren: RootRouteChildren = {
   CatalogoRoute: CatalogoRoute,
   ContatoRoute: ContatoRoute,
   EmpresaRoute: EmpresaRoute,
+  ApiPublicPedidoWebhookRoute: ApiPublicPedidoWebhookRoute,
   ApiPublicProductImageRoute: ApiPublicProductImageRoute,
   ApiPublicSyncEstoqueRoute: ApiPublicSyncEstoqueRoute,
 }

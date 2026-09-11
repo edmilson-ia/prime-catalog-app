@@ -6,7 +6,7 @@ import { normalizeProductName, useProductStock } from "@/lib/stock";
 import { useEffect } from "react";
 
 export function CartSheet() {
-  const { lines, total, cartOpen, setCartOpen, increment, decrement, updatePrice, whatsappUrl } =
+  const { lines, total, cartOpen, setCartOpen, increment, decrement, updatePrice, placeOrder } =
     useCart();
   const { data: stockByName = {} } = useProductStock();
 
@@ -120,15 +120,14 @@ export function CartSheet() {
               {formatBRL(total)}
             </span>
           </div>
-          <a
-            href={whatsappUrl()}
-            target="_blank"
-            rel="noreferrer"
+          <button
+            type="button"
+            onClick={placeOrder}
             className="flex w-full items-center justify-center gap-2 rounded-full bg-gold px-4 py-3 text-sm font-bold text-ink transition-colors hover:bg-gold-hover"
           >
             <WhatsappIcon className="size-4 text-whatsapp" />
             Finalizar pedido no WhatsApp
-          </a>
+          </button>
         </footer>
       </div>
     </div>

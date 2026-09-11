@@ -22,8 +22,7 @@ const tabs: { to: string; label: string; icon: LucideIcon }[] = [
 ];
 
 export function PhoneShell({ children }: { children: ReactNode }) {
-  const { count, whatsappUrl } = useCart();
-  const { lines, setCartOpen } = useCart();
+  const { count, lines, setCartOpen, placeOrder } = useCart();
   const { data: stockByName = {} } = useProductStock();
 
   const openOrder = () => {
@@ -35,7 +34,7 @@ export function PhoneShell({ children }: { children: ReactNode }) {
       setCartOpen(true);
       return;
     }
-    window.open(whatsappUrl(), "_blank", "noopener,noreferrer");
+    placeOrder();
   };
 
   return (

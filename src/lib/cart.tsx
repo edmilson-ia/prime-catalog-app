@@ -8,12 +8,42 @@ import {
   type ReactNode,
 } from "react";
 import { formatBRL, type Product } from "@/data/catalog";
+import { DEFAULT_WHATSAPP_NUMBER, useWhatsappNumber } from "@/lib/settings";
 
 const STORAGE_KEY = "prime-cart";
 const ORDER_KEY = "prime-order-number";
 const FIRST_ORDER = 1001;
 
-export const WHATSAPP_NUMBER = "5521988012670";
+/** @deprecated use useWhatsappNumber() — kept as a static fallback only */
+export const WHATSAPP_NUMBER = DEFAULT_WHATSAPP_NUMBER;
+
+async function notifyOrderWebhook(
+  lines: { product: Product; qty: number; unitPrice: number }[],
+  total: number,
+) {
+  if (lines.length === 0) return;
+  try {
+    const payload = {
+      itens: lines.map((l) => ({
+        produto: l.product.name,
+        quantidade: l.qty,
+        precoUnitario: l.unitPrice,
+        subtotal: Math.round(l.unitPrice * l.qty * 100) / 100,
+      })),
+      totalItens: lines.reduce((sum, l) => sum + l.qty, 0),
+      totalPedido: total,
+      criadoEm: new Date().toISOString(),
+    };
+    await fetch("/api/public/pedido-webhook", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(5000),
+    });
+  } catch {
+    /* silencioso: não deve afetar a experiência do cliente */
+  }
+}
 
 function nextOrderNumber() {
   try {
@@ -43,6 +73,7 @@ type CartContextValue = {
   cartOpen: boolean;
   setCartOpen: (open: boolean) => void;
   whatsappUrl: () => string;
+  placeOrder: () => void;
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -51,6 +82,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [lines, setLines] = useState<CartLine[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const { data: whatsappNumber = DEFAULT_WHATSAPP_NUMBER } = useWhatsappNumber();
 
   useEffect(() => {
     try {
@@ -102,13 +134,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const updatePrice = useCallback((id: string, unitPrice: number) => {
-    setLines((prev) =>
-      prev.map((line) =>
-        line.product.id === id && line.unitPrice !== unitPrice
-          ? { ...line, unitPrice }
-          : line,
-      ),
-    );
+    setLines((prev) => {
+      const index = prev.findIndex((line) => line.product.id === id);
+      // Bail out with the SAME array reference when nothing actually changes —
+      // otherwise every render creates a new `lines` array, which retriggers any
+      // effect keyed on `lines` (e.g. CartSheet's price-sync effect) forever.
+      if (index === -1 || prev[index].unitPrice === unitPrice) return prev;
+      const next = [...prev];
+      next[index] = { ...next[index], unitPrice };
+      return next;
+    });
   }, []);
 
   const value = useMemo<CartContextValue>(() => {
@@ -130,7 +165,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
         const totalItems = pricedLines.reduce((sum, l) => sum + l.qty, 0);
         message = `Olá, Prime Alimentos! Gostaria de fazer o pedido:\n\nPedido nº ${order}\n\n${items}\n\nQuantidade de itens: ${totalItems}\nTotal geral: ${formatBRL(total)}`;
       }
-      return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+      return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    };
+
+    const placeOrder = () => {
+      void notifyOrderWebhook(pricedLines, total);
+      window.open(whatsappUrl(), "_blank", "noopener,noreferrer");
     };
 
     return {
@@ -146,8 +186,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
       cartOpen,
       setCartOpen,
       whatsappUrl,
+      placeOrder,
     };
-  }, [lines, cartOpen, add, increment, decrement, updatePrice]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- pricedLines is derived
+    // fresh from `lines` on every render; including it here would make this memo
+    // recompute (and return a new `lines` array reference) on every render, which
+    // creates an infinite update loop in consumers that key effects off `lines`.
+  }, [lines, cartOpen, add, increment, decrement, updatePrice, whatsappNumber]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

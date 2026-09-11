@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { AppHeader } from "@/components/AppHeader";
-import { WHATSAPP_NUMBER } from "@/lib/cart";
+import { DEFAULT_WHATSAPP_NUMBER, useWhatsappNumber } from "@/lib/settings";
 
 export const Route = createFileRoute("/cadastro")({
   head: () => ({
@@ -25,6 +25,7 @@ export const Route = createFileRoute("/cadastro")({
 });
 
 function Cadastro() {
+  const { data: whatsappNumber = DEFAULT_WHATSAPP_NUMBER } = useWhatsappNumber();
   const [form, setForm] = useState({
     nome: "",
     estabelecimento: "",
@@ -73,7 +74,7 @@ function Cadastro() {
           ))}
 
           <a
-            href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`}
+            href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`}
             target="_blank"
             rel="noreferrer"
             className="flex items-center justify-center rounded-full bg-gold px-4 py-3 text-sm font-bold text-ink transition-colors hover:bg-gold-hover"
