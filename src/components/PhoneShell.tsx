@@ -11,6 +11,7 @@ import type { ReactNode } from "react";
 import { CartSheet } from "@/components/CartSheet";
 import { WhatsappIcon } from "@/components/WhatsappIcon";
 import { useCart } from "@/lib/cart";
+import { normalizeProductName, useProductStock } from "@/lib/stock";
 
 const tabs: { to: string; label: string; icon: LucideIcon }[] = [
   { to: "/", label: "Início", icon: Home },
@@ -22,16 +23,29 @@ const tabs: { to: string; label: string; icon: LucideIcon }[] = [
 
 export function PhoneShell({ children }: { children: ReactNode }) {
   const { count, whatsappUrl } = useCart();
+  const { lines, setCartOpen } = useCart();
+  const { data: stockByName = {} } = useProductStock();
+
+  const openOrder = () => {
+    const hasChangedPrice = lines.some((line) => {
+      const current = stockByName[normalizeProductName(line.product.name)]?.promotionalPrice;
+      return current !== null && current !== undefined && current > 0 && current !== line.unitPrice;
+    });
+    if (hasChangedPrice) {
+      setCartOpen(true);
+      return;
+    }
+    window.open(whatsappUrl(), "_blank", "noopener,noreferrer");
+  };
 
   return (
     <div className="flex h-dvh justify-center py-0 sm:py-6">
       <div className="relative flex h-full w-full max-w-[400px] flex-col overflow-hidden bg-background shadow-[var(--shadow-frame)] sm:rounded-[2.25rem] sm:border-4 sm:border-ink">
         <main className="flex-1 overflow-y-auto pb-28">{children}</main>
 
-        <a
-          href={whatsappUrl()}
-          target="_blank"
-          rel="noreferrer"
+        <button
+          type="button"
+          onClick={openOrder}
           className="absolute right-4 bottom-20 z-30 flex items-center gap-2 rounded-full bg-primary py-3 pr-4 pl-3.5 text-sm font-bold text-primary-foreground shadow-[var(--shadow-card)] transition-colors hover:bg-brand-hover"
         >
           <WhatsappIcon className="size-4 text-gold" />
@@ -41,7 +55,7 @@ export function PhoneShell({ children }: { children: ReactNode }) {
               {count}
             </span>
           ) : null}
-        </a>
+        </button>
 
         <CartSheet />
 

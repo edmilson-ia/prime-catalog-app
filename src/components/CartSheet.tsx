@@ -44,6 +44,14 @@ export function CartSheet() {
             lines.map((line) => {
               const stock = stockByName[normalizeProductName(line.product.name)];
               const outOfStock = stock !== undefined && (stock.quantity ?? 0) <= 0;
+              const promotionalPrice = stock?.promotionalPrice;
+              const currentPrice =
+                promotionalPrice !== null &&
+                promotionalPrice !== undefined &&
+                promotionalPrice > 0 &&
+                promotionalPrice !== line.product.price
+                  ? promotionalPrice
+                  : line.product.price;
 
               return (
               <div
@@ -55,9 +63,9 @@ export function CartSheet() {
                     {line.product.name}
                   </p>
                   <p className="text-[11px] text-muted-foreground">
-                    {formatBRL(line.product.price)} ·{" "}
+                    {formatBRL(currentPrice)} ·{" "}
                     <span className="font-semibold text-ink">
-                      {formatBRL(line.product.price * line.qty)}
+                      {formatBRL(currentPrice * line.qty)}
                     </span>
                   </p>
                 </div>

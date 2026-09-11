@@ -5,10 +5,12 @@ import { supabase } from "@/integrations/supabase/client";
 type StockRow = {
   PRODUTO: string;
   quantidade_estoque: number | null;
+  preco_promocional: number | null;
 };
 
 export type ProductStock = {
   quantity: number | null;
+  promotionalPrice: number | null;
 };
 
 const STOCK_QUERY_KEY = ["catalog-stock"] as const;
@@ -21,13 +23,14 @@ async function fetchProductStock() {
   const client = supabase as unknown as SupabaseClient;
   const { data, error } = await client
     .from("produtos")
-    .select('"PRODUTO", quantidade_estoque');
+    .select('"PRODUTO", quantidade_estoque, preco_promocional');
 
   if (error) throw error;
 
   return (data as StockRow[]).reduce<Record<string, ProductStock>>((stock, row) => {
     stock[normalizeProductName(row.PRODUTO)] = {
       quantity: row.quantidade_estoque,
+      promotionalPrice: row.preco_promocional,
     };
     return stock;
   }, {});
