@@ -14,6 +14,21 @@ export type Database = {
   }
   public: {
     Tables: {
+      estoque_sync_config: {
+        Row: {
+          singleton: boolean
+          token: string
+        }
+        Insert: {
+          singleton?: boolean
+          token?: string
+        }
+        Update: {
+          singleton?: boolean
+          token?: string
+        }
+        Relationships: []
+      }
       produtos: {
         Row: {
           estoque_atualizado_em: string | null
@@ -40,7 +55,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      sync_product_stock: { Args: { _rows: Json }; Returns: Json }
     }
     Enums: {
       [_ in never]: never
