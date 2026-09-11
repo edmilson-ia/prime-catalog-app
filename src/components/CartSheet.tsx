@@ -2,10 +2,12 @@ import { Minus, Plus, ShoppingCart, X } from "lucide-react";
 import { formatBRL } from "@/data/catalog";
 import { useCart } from "@/lib/cart";
 import { WhatsappIcon } from "@/components/WhatsappIcon";
+import { normalizeProductName, useProductStock } from "@/lib/stock";
 
 export function CartSheet() {
   const { lines, total, cartOpen, setCartOpen, increment, decrement, whatsappUrl } =
     useCart();
+  const { data: stockByName = {} } = useProductStock();
 
   if (!cartOpen) return null;
 
@@ -39,7 +41,11 @@ export function CartSheet() {
               Seu carrinho está vazio.
             </p>
           ) : (
-            lines.map((line) => (
+            lines.map((line) => {
+              const stock = stockByName[normalizeProductName(line.product.name)];
+              const outOfStock = stock !== undefined && (stock.quantity ?? 0) <= 0;
+
+              return (
               <div
                 key={line.product.id}
                 className="flex items-center gap-3 rounded-xl bg-secondary/60 p-2.5"
@@ -71,13 +77,15 @@ export function CartSheet() {
                     type="button"
                     aria-label="Adicionar uma unidade"
                     onClick={() => increment(line.product.id)}
-                    className="grid size-6 place-items-center rounded-full bg-primary text-primary-foreground"
+                    disabled={outOfStock}
+                    className="grid size-6 place-items-center rounded-full bg-primary text-primary-foreground disabled:cursor-not-allowed disabled:bg-destructive disabled:opacity-40"
                   >
                     <Plus className="size-3.5" />
                   </button>
                 </div>
               </div>
-            ))
+              );
+            })
           )}
         </div>
 

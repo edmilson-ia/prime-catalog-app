@@ -5,6 +5,7 @@ import { AppHeader } from "@/components/AppHeader";
 import { CategoryIcon } from "@/components/CategoryIcon";
 import { ProductCard } from "@/components/ProductCard";
 import { categories, products } from "@/data/catalog";
+import { normalizeProductName, useProductStock } from "@/lib/stock";
 
 type CatalogSearch = { cat?: string | undefined };
 
@@ -35,6 +36,7 @@ function Catalogo() {
   const { cat } = Route.useSearch();
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
+  const { data: stockByName = {} } = useProductStock();
 
   const activeCat = cat ?? "todos";
   const term = query.trim().toLowerCase();
@@ -119,7 +121,11 @@ function Catalogo() {
             </p>
           ) : (
             searchResults.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard
+                key={product.id}
+                product={product}
+                stock={stockByName[normalizeProductName(product.name)]}
+              />
             ))
           )}
         </section>
@@ -142,7 +148,11 @@ function Catalogo() {
                 </span>
               </div>
               {group.items.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  stock={stockByName[normalizeProductName(product.name)]}
+                />
               ))}
             </section>
           ))}

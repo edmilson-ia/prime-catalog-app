@@ -3,8 +3,15 @@ import { useState } from "react";
 import { CategoryIcon } from "@/components/CategoryIcon";
 import { categoryBySlug, formatBRL, type Product } from "@/data/catalog";
 import { useCart } from "@/lib/cart";
+import type { ProductStock } from "@/lib/stock";
 
-export function ProductCard({ product }: { product: Product }) {
+export function ProductCard({
+  product,
+  stock,
+}: {
+  product: Product;
+  stock?: ProductStock;
+}) {
   const { qtyOf, add, increment, decrement } = useCart();
   const qty = qtyOf(product.id);
   const category = categoryBySlug(product.category);
@@ -12,6 +19,7 @@ export function ProductCard({ product }: { product: Product }) {
   const [zoom, setZoom] = useState(false);
 
   const hasImage = imageOk && product.image;
+  const outOfStock = stock !== undefined && (stock.quantity ?? 0) <= 0;
 
   return (
     <article className="flex gap-3 rounded-2xl bg-card p-3 shadow-[var(--shadow-card)]">
@@ -70,9 +78,16 @@ export function ProductCard({ product }: { product: Product }) {
 
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <h3 className="text-sm leading-snug font-semibold text-ink">
-          {product.name}
-        </h3>
+        <div className="flex flex-wrap items-start gap-1.5">
+          <h3 className="min-w-0 flex-1 text-sm leading-snug font-semibold text-ink">
+            {product.name}
+          </h3>
+          {outOfStock ? (
+            <span className="shrink-0 rounded-md bg-destructive px-1.5 py-1 text-[9px] leading-none font-bold text-destructive-foreground">
+              FORA DE ESTOQUE
+            </span>
+          ) : null}
+        </div>
         {product.description ? (
           <p className="mt-0.5 line-clamp-2 text-[11px] text-muted-foreground">
             {product.description}
@@ -88,7 +103,8 @@ export function ProductCard({ product }: { product: Product }) {
             <button
               type="button"
               onClick={() => add(product)}
-              className="rounded-full bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground transition-colors hover:bg-brand-hover"
+              disabled={outOfStock}
+              className="rounded-full bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground transition-colors hover:bg-brand-hover disabled:cursor-not-allowed disabled:bg-destructive disabled:opacity-60"
             >
               Adicionar
             </button>
@@ -98,7 +114,8 @@ export function ProductCard({ product }: { product: Product }) {
                 type="button"
                 aria-label="Remover uma unidade"
                 onClick={() => decrement(product.id)}
-                className="grid size-6 place-items-center rounded-full bg-card text-ink"
+                disabled={outOfStock}
+                className="grid size-6 place-items-center rounded-full bg-card text-ink disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <Minus className="size-3.5" />
               </button>
@@ -109,7 +126,8 @@ export function ProductCard({ product }: { product: Product }) {
                 type="button"
                 aria-label="Adicionar uma unidade"
                 onClick={() => increment(product.id)}
-                className="grid size-6 place-items-center rounded-full bg-primary text-primary-foreground"
+                disabled={outOfStock}
+                className="grid size-6 place-items-center rounded-full bg-primary text-primary-foreground disabled:cursor-not-allowed disabled:bg-destructive disabled:opacity-40"
               >
                 <Plus className="size-3.5" />
               </button>
