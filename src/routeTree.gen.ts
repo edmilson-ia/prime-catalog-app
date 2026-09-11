@@ -15,6 +15,7 @@ import { Route as CatalogoRouteImport } from './routes/catalogo'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as EmpresaRouteImport } from './routes/empresa'
 import { Route as ApiPublicProductImageRouteImport } from './routes/api/public/product-image'
+import { Route as ApiPublicSyncEstoqueRouteImport } from './routes/api/public/sync-estoque'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,6 +47,11 @@ const ApiPublicProductImageRoute = ApiPublicProductImageRouteImport.update({
   path: '/api/public/product-image',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicSyncEstoqueRoute = ApiPublicSyncEstoqueRouteImport.update({
+  id: '/api/public/sync-estoque',
+  path: '/api/public/sync-estoque',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/contato': typeof ContatoRoute
   '/empresa': typeof EmpresaRoute
   '/api/public/product-image': typeof ApiPublicProductImageRoute
+  '/api/public/sync-estoque': typeof ApiPublicSyncEstoqueRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/contato': typeof ContatoRoute
   '/empresa': typeof EmpresaRoute
   '/api/public/product-image': typeof ApiPublicProductImageRoute
+  '/api/public/sync-estoque': typeof ApiPublicSyncEstoqueRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,6 +79,7 @@ export interface FileRoutesById {
   '/contato': typeof ContatoRoute
   '/empresa': typeof EmpresaRoute
   '/api/public/product-image': typeof ApiPublicProductImageRoute
+  '/api/public/sync-estoque': typeof ApiPublicSyncEstoqueRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -81,6 +90,7 @@ export interface FileRouteTypes {
     | '/contato'
     | '/empresa'
     | '/api/public/product-image'
+    | '/api/public/sync-estoque'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -89,6 +99,7 @@ export interface FileRouteTypes {
     | '/contato'
     | '/empresa'
     | '/api/public/product-image'
+    | '/api/public/sync-estoque'
   id:
     | '__root__'
     | '/'
@@ -97,6 +108,7 @@ export interface FileRouteTypes {
     | '/contato'
     | '/empresa'
     | '/api/public/product-image'
+    | '/api/public/sync-estoque'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -106,6 +118,7 @@ export interface RootRouteChildren {
   ContatoRoute: typeof ContatoRoute
   EmpresaRoute: typeof EmpresaRoute
   ApiPublicProductImageRoute: typeof ApiPublicProductImageRoute
+  ApiPublicSyncEstoqueRoute: typeof ApiPublicSyncEstoqueRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -152,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicProductImageRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/sync-estoque': {
+      id: '/api/public/sync-estoque'
+      path: '/api/public/sync-estoque'
+      fullPath: '/api/public/sync-estoque'
+      preLoaderRoute: typeof ApiPublicSyncEstoqueRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -162,6 +182,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContatoRoute: ContatoRoute,
   EmpresaRoute: EmpresaRoute,
   ApiPublicProductImageRoute: ApiPublicProductImageRoute,
+  ApiPublicSyncEstoqueRoute: ApiPublicSyncEstoqueRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
