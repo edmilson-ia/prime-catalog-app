@@ -1,22 +1,18 @@
-# Sincronização automática de estoque
+# Painel administrativo de promoções
 
-## Resultado
-- Criar um endpoint seguro `sync-estoque` no aplicativo para ler a aba pública `ESTOQUE` da planilha.
-- Interpretar o CSV pelas colunas `PRODUTO` e `QUANTIDADE`, normalizando nomes com espaços colapsados e letras maiúsculas.
-- Atualizar `quantidade_estoque` e `estoque_atualizado_em` somente para produtos encontrados.
-- Retornar a quantidade atualizada e os nomes da planilha sem correspondência no catálogo.
+## Objetivo
+Adicionar acesso administrativo exclusivo para editar preços promocionais, refletindo essas promoções automaticamente no catálogo, carrinho e pedido pelo WhatsApp.
 
-## Segurança e agendamento
-- Proteger o endpoint com um token privado gerado e mantido apenas no backend.
-- Habilitar os recursos de agendamento e chamadas HTTP do banco.
-- Agendar uma chamada ao endpoint a cada minuto usando a URL estável de prévia.
-- A rotina administrativa continuará sendo a única capaz de alterar o estoque; clientes mantêm somente leitura.
-
-## Validação
-- Executar a sincronização manualmente após a configuração.
-- Conferir no banco quantos produtos receberam estoque e informar os nomes não encontrados.
-- Não alterar telas, produtos, preços, imagens ou o carrinho.
+## Implementação
+- Ativar login por e-mail e senha, impedir novos cadastros públicos e criar somente o administrador informado.
+- Adicionar `preco_promocional` aos produtos e uma regra administrativa separada que permita a esse usuário alterar apenas essa coluna.
+- Criar `/admin` para login e `/admin/produtos` para a lista protegida com salvar e remover promoção.
+- Ampliar a atualização automática atual para trazer estoque e promoção juntos.
+- Aplicar o preço promocional no card, carrinho, totais e mensagem do WhatsApp, mantendo todo o comportamento de estoque existente.
+- Validar login, bloqueio de acesso, gravação/remoção de promoção e cálculo do pedido.
 
 ## Detalhes técnicos
-- Nesta aplicação TanStack, novas Edge Functions não são suportadas; será usado um endpoint público do servidor com autenticação própria, equivalente para o cron.
-- A execução a cada minuto representa 1.440 chamadas por dia e pode manter o backend ativo, elevando custos. A frequência será preservada porque foi solicitada para estoque quase em tempo real; o atraso máximo esperado é de cerca de um minuto.
+- Sem tabela de perfil; a autorização administrativa ficará em uma tabela de papéis separada, protegida por regras de acesso.
+- Novos cadastros ficarão desativados; usuários autenticados sem papel de administrador não poderão editar promoções.
+- A permissão no banco será limitada à coluna de preço promocional, sem liberar alterações de estoque ou nomes.
+- A senha temporária será gerada de forma segura e o usuário administrador será criado com e-mail confirmado.
