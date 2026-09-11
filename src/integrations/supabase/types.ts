@@ -14,7 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      produtos: {
+        Row: {
+          estoque_atualizado_em: string | null
+          id: number
+          PRODUTO: string
+          quantidade_estoque: number | null
+        }
+        Insert: {
+          estoque_atualizado_em?: string | null
+          id?: number
+          PRODUTO: string
+          quantidade_estoque?: number | null
+        }
+        Update: {
+          estoque_atualizado_em?: string | null
+          id?: number
+          PRODUTO?: string
+          quantidade_estoque?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
