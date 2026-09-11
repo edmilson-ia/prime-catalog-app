@@ -1,14 +1,22 @@
-# Estoque em tempo real no catálogo
+# Sincronização automática de estoque
 
-## O que será feito
-- Consultar no Lovable Cloud somente o nome e a quantidade em estoque dos produtos.
-- Normalizar os nomes (remover espaços extras e comparar em maiúsculas) antes de cruzar com o catálogo atual.
-- Atualizar os dados automaticamente a cada 45 segundos enquanto o catálogo estiver aberto.
-- Mostrar `FORA DE ESTOQUE` em vermelho somente quando um produto encontrado tiver quantidade nula, zero ou negativa.
-- Desativar os controles de compra desses produtos; itens ainda não encontrados continuarão funcionando como hoje.
+## Resultado
+- Criar um endpoint seguro `sync-estoque` no aplicativo para ler a aba pública `ESTOQUE` da planilha.
+- Interpretar o CSV pelas colunas `PRODUTO` e `QUANTIDADE`, normalizando nomes com espaços colapsados e letras maiúsculas.
+- Atualizar `quantidade_estoque` e `estoque_atualizado_em` somente para produtos encontrados.
+- Retornar a quantidade atualizada e os nomes da planilha sem correspondência no catálogo.
+
+## Segurança e agendamento
+- Proteger o endpoint com um token privado gerado e mantido apenas no backend.
+- Habilitar os recursos de agendamento e chamadas HTTP do banco.
+- Agendar uma chamada ao endpoint a cada minuto usando a URL estável de prévia.
+- A rotina administrativa continuará sendo a única capaz de alterar o estoque; clientes mantêm somente leitura.
+
+## Validação
+- Executar a sincronização manualmente após a configuração.
+- Conferir no banco quantos produtos receberam estoque e informar os nomes não encontrados.
+- Não alterar telas, produtos, preços, imagens ou o carrinho.
 
 ## Detalhes técnicos
-- Usar o cliente de dados já gerado no projeto e TanStack Query para cache, deduplicação e polling.
-- Centralizar a consulta no catálogo e repassar apenas a quantidade correspondente para cada cartão.
-- Preservar preços, imagens, descrições e todas as outras telas e funções.
-- Validar o catálogo no navegador após a implementação.
+- Nesta aplicação TanStack, novas Edge Functions não são suportadas; será usado um endpoint público do servidor com autenticação própria, equivalente para o cron.
+- A execução a cada minuto representa 1.440 chamadas por dia e pode manter o backend ativo, elevando custos. A frequência será preservada porque foi solicitada para estoque quase em tempo real; o atraso máximo esperado é de cerca de um minuto.
