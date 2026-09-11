@@ -18,6 +18,8 @@ export const Route = createFileRoute("/contato")({
         property: "og:description",
         content: "WhatsApp (21) 98801-2670 · Rio de Janeiro · Entrega no mesmo dia.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Contato,
