@@ -27,6 +27,8 @@ export const Route = createFileRoute("/catalogo")({
         content:
           "Busque produtos por nome, filtre por categoria e monte seu pedido direto no WhatsApp.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Catalogo,

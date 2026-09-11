@@ -17,6 +17,8 @@ export const Route = createFileRoute("/cadastro")({
         property: "og:description",
         content: "Envie seus dados pelo WhatsApp e comece a comprar no atacado.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Cadastro,

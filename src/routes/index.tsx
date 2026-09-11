@@ -24,6 +24,8 @@ export const Route = createFileRoute("/")({
         content:
           "Mais de 300 itens em bebidas e alimentos. Faça seu pedido pelo WhatsApp com pagamento via Pix e dinheiro.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Inicio,
