@@ -51,14 +51,33 @@ function AdminPage() {
   };
 
   useEffect(() => {
-    void checkAccess();
-
     const { data: subscription } = supabase.auth.onAuthStateChange((event) => {
       if (event === "PASSWORD_RECOVERY") {
         setRecoveryMode(true);
         setChecking(false);
       }
     });
+
+    // supabase-js defaults to the PKCE flow (required for an SSR app like this
+    // one — the implicit flow's #access_token hash fragment never reaches the
+    // server). A password-reset email link lands here as `?code=...`, which
+    // must be exchanged for a session explicitly; onAuthStateChange alone
+    // never fires PASSWORD_RECOVERY for PKCE links, so without this the
+    // reset link silently did nothing.
+    const code = new URL(window.location.href).searchParams.get("code");
+    if (code) {
+      supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
+        window.history.replaceState({}, "", "/admin");
+        if (!error) {
+          setRecoveryMode(true);
+          setChecking(false);
+        } else {
+          void checkAccess();
+        }
+      });
+    } else {
+      void checkAccess();
+    }
 
     return () => subscription.subscription.unsubscribe();
   }, []);

@@ -135,14 +135,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const updatePrice = useCallback((id: string, unitPrice: number) => {
     setLines((prev) => {
-      const index = prev.findIndex((line) => line.product.id === id);
+      const current = prev.find((line) => line.product.id === id);
       // Bail out with the SAME array reference when nothing actually changes —
       // otherwise every render creates a new `lines` array, which retriggers any
       // effect keyed on `lines` (e.g. CartSheet's price-sync effect) forever.
-      if (index === -1 || prev[index].unitPrice === unitPrice) return prev;
-      const next = [...prev];
-      next[index] = { ...next[index], unitPrice };
-      return next;
+      if (!current || current.unitPrice === unitPrice) return prev;
+      return prev.map((line) =>
+        line.product.id === id ? { ...line, unitPrice } : line,
+      );
     });
   }, []);
 
