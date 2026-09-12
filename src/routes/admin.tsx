@@ -7,6 +7,7 @@ import { products, formatBRL } from "@/data/catalog";
 import { supabase } from "@/integrations/supabase/client";
 import { logoUrl } from "@/lib/logo";
 import { normalizeProductName, useProductStock } from "@/lib/stock";
+import { SUPABASE_RECOVERY_FLAG } from "@/routes/__root";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -51,33 +52,33 @@ function AdminPage() {
   };
 
   useEffect(() => {
+    // The actual `code` exchange happens in __root.tsx (it must run globally,
+    // since a reset-email link that falls back to the site root instead of
+    // /admin would otherwise never be handled). By the time this component
+    // mounts, either that already finished — signaled by this flag in
+    // sessionStorage — or a PASSWORD_RECOVERY event fires directly because we
+    // were already mounted when it happened.
+    let flagged = false;
+    try {
+      flagged = window.sessionStorage.getItem(SUPABASE_RECOVERY_FLAG) === "1";
+      if (flagged) window.sessionStorage.removeItem(SUPABASE_RECOVERY_FLAG);
+    } catch {
+      /* ignore */
+    }
+
+    if (flagged) {
+      setRecoveryMode(true);
+      setChecking(false);
+    } else {
+      void checkAccess();
+    }
+
     const { data: subscription } = supabase.auth.onAuthStateChange((event) => {
       if (event === "PASSWORD_RECOVERY") {
         setRecoveryMode(true);
         setChecking(false);
       }
     });
-
-    // supabase-js defaults to the PKCE flow (required for an SSR app like this
-    // one — the implicit flow's #access_token hash fragment never reaches the
-    // server). A password-reset email link lands here as `?code=...`, which
-    // must be exchanged for a session explicitly; onAuthStateChange alone
-    // never fires PASSWORD_RECOVERY for PKCE links, so without this the
-    // reset link silently did nothing.
-    const code = new URL(window.location.href).searchParams.get("code");
-    if (code) {
-      supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
-        window.history.replaceState({}, "", "/admin");
-        if (!error) {
-          setRecoveryMode(true);
-          setChecking(false);
-        } else {
-          void checkAccess();
-        }
-      });
-    } else {
-      void checkAccess();
-    }
 
     return () => subscription.subscription.unsubscribe();
   }, []);

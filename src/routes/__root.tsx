@@ -119,18 +119,54 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+export const SUPABASE_RECOVERY_FLAG = "supabase_recovery_pending";
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
 
   useEffect(() => {
+    const goToAdminRecovery = () => {
+      try {
+        window.sessionStorage.setItem(SUPABASE_RECOVERY_FLAG, "1");
+      } catch {
+        /* ignore */
+      }
+      if (router.state.location.pathname !== "/admin") {
+        void router.navigate({ to: "/admin" });
+      }
+    };
+
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "PASSWORD_RECOVERY") {
+        goToAdminRecovery();
+        return;
+      }
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") {
         return;
       }
       router.invalidate();
       if (session) queryClient.invalidateQueries();
     });
+
+    // A password-reset email link is handled by Supabase's own /verify
+    // endpoint, which redirects back here — but if our exact redirectTo
+    // isn't on the project's allowed list, Supabase silently falls back to
+    // the site's root URL instead of /admin. Detecting the PKCE `code` param
+    // globally (not just inside the /admin route) means the recovery still
+    // completes no matter which page it lands on. This runs once for the
+    // whole app (not duplicated in /admin) because a `code` can only be
+    // exchanged a single time.
+    const code = new URL(window.location.href).searchParams.get("code");
+    if (code) {
+      supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("code");
+        window.history.replaceState({}, "", url.pathname === "/" ? "/" : url.pathname);
+        if (!error) goToAdminRecovery();
+      });
+    }
+
     return () => data.subscription.unsubscribe();
   }, [queryClient, router]);
 
