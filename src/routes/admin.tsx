@@ -253,7 +253,7 @@ function SetNewPassword({ onDone }: { onDone: () => Promise<void> }) {
     const { error: updateError } = await supabase.auth.updateUser({ password });
     setSaving(false);
     if (updateError) {
-      setError("Não foi possível salvar a nova senha. Tente pedir um novo link.");
+      setError(`Não foi possível salvar: ${updateError.message}`);
       return;
     }
     await onDone();
@@ -343,7 +343,7 @@ function ChangePasswordCard({ onClose }: { onClose: () => void }) {
     const { error: updateError } = await supabase.auth.updateUser({ password });
     setSaving(false);
     if (updateError) {
-      setError("Não foi possível trocar a senha.");
+      setError(`Não foi possível trocar: ${updateError.message}`);
       return;
     }
     setStatus("Senha atualizada com sucesso.");
