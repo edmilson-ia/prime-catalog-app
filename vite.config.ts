@@ -12,4 +12,9 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // Lovable's sandbox always forces cloudflare-module regardless of this setting.
+  // Outside the sandbox (local builds, VPS deploys) this targets a plain Node server instead.
+  nitro: {
+    preset: "node-server",
+  },
 });

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { products, formatBRL } from "@/data/catalog";
 import { supabase } from "@/integrations/supabase/client";
+import { logoUrl } from "@/lib/logo";
 import { normalizeProductName, useProductStock } from "@/lib/stock";
 
 export const Route = createFileRoute("/admin")({
@@ -151,8 +152,9 @@ function LoginForm({
   return (
     <div className="flex min-h-[75vh] items-center px-5">
       <div className="w-full space-y-4 rounded-2xl bg-card p-5 shadow-[var(--shadow-card)]">
-        <div>
-          <p className="text-xs font-bold text-gold-hover">ACESSO RESTRITO</p>
+        <div className="flex flex-col items-center text-center">
+          <img src={logoUrl} alt="Prime Alimentos" width={1024} height={1024} className="size-16 rounded-full bg-card object-contain p-1 shadow-[var(--shadow-card)]" />
+          <p className="mt-3 text-xs font-bold text-gold-hover">ACESSO RESTRITO</p>
           <h1 className="mt-1 text-xl font-bold text-ink">Painel administrativo</h1>
         </div>
 
@@ -234,8 +236,9 @@ function SetNewPassword({ onDone }: { onDone: () => Promise<void> }) {
   return (
     <div className="flex min-h-[75vh] items-center px-5">
       <form onSubmit={submit} className="w-full space-y-4 rounded-2xl bg-card p-5 shadow-[var(--shadow-card)]">
-        <div>
-          <p className="text-xs font-bold text-gold-hover">NOVA SENHA</p>
+        <div className="flex flex-col items-center text-center">
+          <img src={logoUrl} alt="Prime Alimentos" width={1024} height={1024} className="size-16 rounded-full bg-card object-contain p-1 shadow-[var(--shadow-card)]" />
+          <p className="mt-3 text-xs font-bold text-gold-hover">NOVA SENHA</p>
           <h1 className="mt-1 text-xl font-bold text-ink">Defina sua nova senha</h1>
         </div>
         <label className="block space-y-1.5 text-xs font-semibold text-ink">
@@ -267,7 +270,10 @@ function PromotionManager({ query, setQuery, signOut }: { query: string; setQuer
     <div className="pb-6">
       <header className="sticky top-0 z-10 border-b border-border bg-card px-4 py-3">
         <div className="flex items-center justify-between gap-3">
-          <div><p className="text-[10px] font-bold text-gold-hover">ADMINISTRAÇÃO</p><h1 className="text-lg font-bold text-ink">Preços promocionais</h1></div>
+          <div className="flex items-center gap-2.5">
+            <img src={logoUrl} alt="Prime Alimentos" width={1024} height={1024} className="size-9 shrink-0 rounded-full bg-background object-contain p-0.5" />
+            <div><p className="text-[10px] font-bold text-gold-hover">ADMINISTRAÇÃO</p><h1 className="text-lg font-bold text-ink">Preços promocionais</h1></div>
+          </div>
           <div className="flex items-center gap-2">
             <Button type="button" variant="outline" size="icon" onClick={() => setShowPasswordForm((v) => !v)} aria-label="Trocar senha"><KeyRound /></Button>
             <Button type="button" variant="outline" size="icon" onClick={() => void signOut()} aria-label="Sair"><LogOut /></Button>
