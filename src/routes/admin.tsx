@@ -158,8 +158,14 @@ function LoginForm({
     event.preventDefault();
     setSending(true);
     setResetStatus("");
+    // Request the bare origin, not `${origin}/admin`: Supabase's allowed
+    // redirect list apparently requires an exact URL match rather than a
+    // same-origin prefix match, so a path-specific redirectTo was silently
+    // rejected (falling back to the Site URL with the recovery code/tokens
+    // dropped entirely, not just moved to a different page). __root.tsx
+    // handles the recovery globally, so landing on "/" is fine.
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-      redirectTo: `${window.location.origin}/admin`,
+      redirectTo: window.location.origin,
     });
     setSending(false);
     setResetStatus(
